@@ -1,0 +1,57 @@
+<Window x:Class="ScrewingHub.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:ScrewingHub.App.Views"
+        Title="🔩 Screw Tightening Judgment System"
+        Icon="app_icon.png"
+        Height="800" Width="1280"
+        MinHeight="700" MinWidth="1100"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Background="{StaticResource BgPrimaryBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ===== TOP NAV BAR ===== -->
+        <Border Grid.Row="0" Background="{StaticResource BgSecondaryBrush}"
+                BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="0,0,0,1">
+            <DockPanel Margin="16,0">
+                <!-- App Title -->
+                <TextBlock Text="🔩 SCREW TIGHTENING JUDGMENT SYSTEM"
+                           VerticalAlignment="Center" DockPanel.Dock="Left"
+                           FontFamily="{StaticResource PrimaryFont}" FontSize="14" FontWeight="Bold"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
+
+                <!-- Nav Buttons (Right) -->
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                    <RadioButton x:Name="NavDashboard" Content="📊 Dashboard" 
+                                 IsChecked="True" GroupName="NavGroup"
+                                 Style="{StaticResource NavRadioButton}"
+                                 Checked="NavButton_Checked"/>
+                    <RadioButton x:Name="NavHistory" Content="📋 History"
+                                 GroupName="NavGroup"
+                                 Style="{StaticResource NavRadioButton}"
+                                 Checked="NavButton_Checked"/>
+                    <RadioButton x:Name="NavSettings" Content="⚙ Settings"
+                                 GroupName="NavGroup"
+                                 Style="{StaticResource NavRadioButton}"
+                                 Checked="NavButton_Checked"/>
+                </StackPanel>
+
+                <!-- Spacer -->
+                <Border/>
+            </DockPanel>
+        </Border>
+
+        <!-- ===== CONTENT AREA ===== -->
+        <Grid Grid.Row="1">
+            <views:DashboardView x:Name="DashboardPage" Visibility="Visible"/>
+            <views:HistoryView x:Name="HistoryPage" Visibility="Collapsed"/>
+            <views:SettingsView x:Name="SettingsPage" Visibility="Collapsed"/>
+        </Grid>
+    </Grid>
+</Window>

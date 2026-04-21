@@ -1,0 +1,40 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+
+# Visual Studio files
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+
+# Log files
+*.log
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# [Project-specific]
+ScrewingHub/.vs/
+ScrewingHub/src/**/bin/
+ScrewingHub/src/**/obj/
+ScrewingHub/tests/**/bin/
+ScrewingHub/tests/**/obj/
+**/bin/
+**/obj/
+**/publish/

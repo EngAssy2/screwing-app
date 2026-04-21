@@ -1,0 +1,960 @@
+--- Page 1 ---
+Professional tool
+Screw Fastening Monitor
+Model: DTM10/DTM45
+[Specifications]
+Model
+DTM10
+DTM45
+Communication method
+RS-232C
+Mass (kg)
+0.26 (0.57)
+0.28 (0.62)
+Connectable electric screwdriver/
+controller models
+DLV04C10L-A#1
+DLV10C10L-A#1
+DCC0101X-AZ
+DLV45C12#2-A#1
+DCC0241X-AZ
+#1: X, Y, Z
+#2: P, L
+ Refer to p. 4 for details.
+ For operation of the electric screwdriver, refer to the instruction manual that is provided with the electric 
+screwdriver.
+
+Please read the manual carefully before you attempt to use your tool so that you may use it 
+properly and safely.
+
+Keep the manual handy - so you can use it whenever necessary.
+•  Due to continuous product development/improvement, the specifications and configurations in this 
+document are subject to change without prior notice.
+ TV08150-2
+02/2020
+Indoor Use Only
+(Original Instructions)
+INSTRUCTION 
+MANUAL
+Manufactured by.
+NITTO KOHKI CO., LTD.
+9-4, Nakaikegami 2-chome, Ohta-ku, Tokyo, 146-8555, Japan
+Tel : +81-3-3755-1111 Fax : +81-3-3753-8791
+EN
+This instruction manual is written in English.
+Instruction manuals in other languages can be downloaded from the URL below.
+FR
+Ce manuel d'instructions est rédigé en anglais.
+Les manuels d'instructions dans d'autres langues peuvent être téléchargés à partir de l'URL ci-dessous.
+DE
+Diese Bedienungsanleitung ist auf Englisch verfasst.
+Bedienungsanleitungen in anderen Sprachen können von der unten genannten URL heruntergeladen 
+werden.
+IT
+Il presente manuale di istruzioni è redatto in lingua inglese.
+I manuali di istruzioni in altre lingue possono essere scaricati dal seguente URL.
+ES
+Este manual de instrucciones está escrito en inglés.
+En la dirección URL indicada abajo se pueden descargar los manuales de instrucciones en otros idiomas.
+PT
+Este manual de instruções está escrito em inglês.
+Pode descarregar os manuais de instruções nos outros idiomas a partir do URL indicado abaixo.
+SC
+本说明手册的语言是英文。
+其他语言的说明手册可从以下 URL 下载。
+http://www.nitto-kohki.co.jp/e/
+
+--- Page 2 ---
+EN
+Instructions
+Thank you very much for your purchase of this NITTO KOHKI product.
+Before using your tool, please read this manual carefully so that you may use it properly to get the most out of it.
+Please keep this manual handy - so you can use it whenever necessary.
+The following safety notations are used throughout the manual to highlight safety precautions for the user and for the 
+tool.
+WARNING:
+Indicates a potentially hazardous situation which, if not avoided by following the 
+instructions given, could result in death or serious injury.
+CAUTION:
+Indicates a potentially hazardous situation which, if not avoided by following the 
+instructions given, could result in injury or material damage.
+*  Please note, however, that failure to observe safety precautions under the "
+CAUTION" category could result in a 
+serious occurrence depending on the situation. 
+Please observe all safety precautions in the manual.
+CAUTION: Important precautions for tool setup, operation and maintenance.
+About pictograms
+ WARNING:
+Failure to follow the instructions for handling could cause danger when using the tool.
+Using this tool improperly could result in serious injury. Read this instruction manual before 
+using the tool.
+Contents
+Instructions ........................................................... ii
+Precautions on Use 
+(Make sure to follow the instructions given) ......... 1
+1. Product Overview ............................................. 2
+Application ............................................................2
+Checking inside the package ................................2
+Part names............................................................3
+2. Specifications ................................................... 4
+RS-232C connector ..............................................4
+Transmission data .................................................4
+3. Connection Diagram ......................................... 6
+4. How to Use ....................................................... 7
+Using time and rotation signal...............................9
+Software for confirmation of output torque ............9
+5. Appendix ......................................................... 10
+When an abnormality has occurred 
+(Troubleshooting) ................................................10
+Maintenance and inspection ...............................10
+Disposal ..............................................................10
+Separately-sold products ....................................11
+Glossary ..............................................................11
+External dimensions............................................12
+
+--- Page 3 ---
+1
+EN
+Precautions on Use (Make sure to follow the instructions given)
+ WARNING
+
+Be sure to check the connectable electric screwdriver with this instruction manual.
+If the model of your electric screwdriver is not mentioned in this manual or it is not an electric screwdriver, or it is 
+not our product, do not connect it.
+Doing so could cause a fire or accident.
+
+Use the tool indoors.
+This tool does not have dust proof or water proof structure. Exposure to dust, sand, or rain while using it 
+outdoors could cause a failure.
+
+If the tool is accidentally dropped or hit, check to ensure there is no breakage, cracking or deformation.
+Breakage, cracking or deformation could cause electric shock or injury.
+
+When the tool becomes overheated, or you notice anything abnormal during usage, switch it OFF immediately 
+and request that the tool be repaired.
+
+Make sure that there is nothing combustible near the tool before starting work.
+If there is anything combustible near the tool, it could cause a fire or accident.
+
+There is an error difference in time measurement of the controller and screw fastening monitor because of a 
+communication lag in DTM10.
+
+The numerical data transmitted by this tool is the converted value of motor current.
+It is not the value of the fastening torque.
+
+Control the torque properly.
+Be sure to test more than once based on actual screw fastening conditions (screw, workpiece and other 
+conditions). Perform the test periodically.
+Operating Procedure
+(1) Under actual screw fastening conditions, use the screwdriver to fasten the screw.
+(2) Using a torque wrench, etc., make sure the screw is fastened at the target torque. (Check using the 
+loosening torque method or refastening torque method.)
+(3) If the screw is not fastened at the correct torque, adjust the torque of the electric screwdriver and fasten 
+the screw again.
+(4) When the screw is fastened at the correct torque, use a torque checker (torque sensor) to maintain the 
+torque of the electric screwdriver.
+About Unit Notation
+This instruction manual is written using both SI units and the imperial measurement method (yards, pounds).
+Numeric values outside the (  ) are the value in SI units, while those inside the (  ) are the imperial measurement 
+value.
+Notation Example: Length 25.4 (1")      Weight: 0.45 (1)      Torque: 1.13 (10)
+About FCC/ISEDC
+
+NOTE: This equipment has been tested and found to comply with the limits for a Class A digital device, pursuant to 
+part 15 of the FCC Rules.
+These limits are designed to provide reasonable protection against harmful interference when the equipment is 
+operated in a commercial environment.
+This equipment generates, uses, and can radiate radio frequency energy and, if not installed and used in 
+accordance with the instruction manual, may cause harmful interference to radio communications. Operation of 
+this equipment in a residential area is likely to cause harmful interference in which case the user will be required to 
+correct the interference at his own expense.
+
+This device complies with part 15 of the FCC Rules. Operation is subject to the following two conditions:
+(1) this device may not cause harmful interference, and
+(2) this device must accept any interference received, including interference that may cause undesired operation.
+Changes or modifications not expressly approved by the party responsible for compliance could void the user’s 
+authority to operate the equipment.
+in
+mm
+lbs
+kg
+Lb·in
+Nm
+
+--- Page 4 ---
+2
+EN
+1. Product Overview
+Application
+This monitor is a peripheral device that transmits the numerical data of the current control type screwdriver during 
+screw fastening to the PC and Programmable Logic Controller (PLC).
+It transmits the following data to the PC or PLC by RS-232C communication.
+Operation channel
+A unit with which fastening is performed continuously under the same conditions, such as the 
+screw fastening torque, rotational speed, and number of fastening screws
+
+For details, refer to the instruction manual for the current control type electric screwdriver.
+Converted current value
+Motor current value at torque up converted to a value between 0 to 4095
+Time
+Time from the start of the electric screwdriver rotation until torque up (0 to 9990 msec)
+Rotation signal 
+(DTM45 only)
+Signal from the start of the electric screwdriver rotation until torque up (0 to 60000)
+DTM45 outputs time or rotation signal. You can select to output either of the two in "Measurement method" 
+(MEASURE) of the common settings of the controller (DCC0241X-AZ). For controller settings, check the instruction 
+manual of DCC0241X-AZ.
+Checking inside the package
+When you open the package box, check the contents of the package and also check for any damage caused by 
+incidents during transportation.
+If a problem is found, consult with your dealer where you purchased the product.
+Screw fastening monitor
+DTM10
+DTM45
+Package content and accessories
+Quantity
+Quantity
+Screw fastening monitor (main unit)
+1
+1
+Connection cord
+1
+1
+Rubber feet
+4
+4
+Instruction Manual (this document, 
+Japanese)
+2
+2
+DTM10
+Connection cord LW9075 (2 m long)
+Rubber feet
+DTM45
+Connection cord DLW9078 (2 m long)
+
+--- Page 5 ---
+3
+EN
+Part names
+ 
+2
+1
+3
+4
+5
+Name
+Function
+1 [STATUS] LED
+Lights in blue when data is transmitted.
+2 [POWER] LED
+Lights in green when current is applied.
+3 RS-232C connector
+Used for connection to the PC or sequencer with the RS-232C communication cable.
+4 [ScrewDriver] receptacle
+Used for connection to the electric screwdriver with the connection cord.
+5 [Controller] receptacle
+Used for connection to the controller with the connection cord.
+
+--- Page 6 ---
+4
+EN
+ 2. Specifications
+Model
+DTM10
+DTM45
+Communication 
+method
+Transmission method
+Asynchronous (asynchronous communication)
+Communication line
+Full duplex
+Transmission speed
+38400 bps
+19200 bps
+Number of data
+8 bits
+Parity
+None
+Stop bit
+1 bit
+Handshake
+None
+Voltage level
+HIGH
+3 to 15 V
+LOW
+-15 to -3 V
+Mass (weight) (kg)
+0.26 (0.57)
+0.28 (0.62)
+External dimensions
+W 124 (4.88) × H 30 (1.18) × D 63 (2.48)
+Compatible models
+DLV04C10L-A#1
+DLV10C10L-A#1
+DCC0101X-AZ
+DLV45C12#2-A#1
+DCC0241X-AZ
+#1: X, Y, Z
+#2: P, L
+RS-232C connector
+Specifications
+D-SUB 9 pin (female)
+Screw
+Inch female screw (#4-40)
+Pin No.
+Name
+Input/output direction
+Description
+2
+RxD
+Output
+(Signal output from the monitor)
+Transmission 
+data
+5
+GND
+Signal ground
+
+Other pins are not used
+5
+#4-40
+1
+6
+9
+Transmission data
+ CAUTION
+
+SUM value is the sum (including ",") of each character data from the first byte to the last byte of the 
+transmission data.
+
+There is an error difference in time measurement of the controller and screw fastening monitor in DTM10.
+The following data is transmitted to the PC or PLC.
+DTM45 outputs time or rotation signal. You can select to output either of the two in "Measurement method" 
+(MEASURE) of the common settings of the controller (DCC0241X-AZ). For controller settings, check the instruction 
+manual of DCC0241X-AZ.
+Operation channel
+A unit with which fastening is performed continuously under the same conditions, such as the 
+screw fastening torque, rotational speed, and number of fastening screws
+
+For details, refer to the instruction manual for the current control type electric screwdriver.
+Converted current value
+Motor current value at torque up converted to a value between 0 to 4095
+Time
+Time from the start of the electric screwdriver rotation until torque up (0 to 9990 msec)
+Rotation signal 
+(DTM45 only)
+Signal from the start of the electric screwdriver rotation until torque up (0 to 60000)
+
+--- Page 7 ---
+5
+EN
+Data format
+UTF-8
+Data length
+11 bytes minimum
+19 bytes maximum (variable length)
+Delimiter (separator character)
+CR + LF (\r\n)
+Output timing
+When screw fastening is complete
+Send command
+CH number (3 to 4 bytes)
+:
+Converted current value (1 to 4 bytes)
+CHp (character data) (p = 1 to 30)
+0 to 4095 (character data)
+0x43
+0x48
+0x30 to 0x39
+Tens place*1
+0x30 to 0x39
+0x3a
+0x30 to 0x39
+Thousands 
+place*1
+0x30 to 0x39
+Hundreds 
+place*1
+0x30 to 0x39
+Tens place*1
+0x30 to 0x39
+-
+Time (msec) (1 to 4 bytes)
+,
+SUM value
+(1 byte)
+CR 
+character
+(1 byte)
+LF 
+character
+(1 byte)
+0 to 9990 (character data)
+0x2d
+0x30 to 0x39
+Thousands 
+place*1
+0x30 to 0x39
+Hundreds 
+place*1
+0x30 to 0x39
+Tens place*1
+0x30 to 0x39
+0x2c
+0x00 to 
+0xFF
+0x0d
+0x0a
+Rotation signal (1 to 5 bytes) 
+0 to 60000 (character data)
+0x30 to 0x36
+Ten thousands 
+place*1
+0x30 to 0x39
+Thousands 
+place*1
+0x30 to 0x39
+Hundreds 
+place*1
+0x30 to 0x39
+Tens place*1
+0x30 to 0x39
+*1 Omitted if the first digit of the CH number, converted current value or rotation signal is 0. The respective places 
+below are omitted in the following examples.
+Operation channel: Tens place
+Converted current value and time: Thousands place
+Rotation signal: Ten thousands place
+E.g.) Operation channel: 1, converted current value: 100, screw fastening time: 400 (msec)
+byte
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+Item
+Operation channel
+:
+Converted current 
+value
+-
+Time
+,
+SUM 
+value
+CR 
+character
+LF 
+character
+UTF-8
+HEX
+0x43
+0x48
+0x31
+0x3a
+0x31
+0x30
+0x30
+0x2d
+0x34
+0x30
+0x30
+0x2c,
+0x74
+0x0d
+0x0a
+DATA
+C
+H
+1
+:
+1
+0
+0
+-
+4
+0
+0
+,
+t
+\r
+\n
+
+Calculation of SUM value: 0 × 43 + 0 × 48 + 0 × 31... + 0 × 30 + 0 × 2c = 0 × 274
+E.g.) Operation channel: 3, converted current value: 310, rotation signal: 3000
+byte
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+Item
+Operation channel
+:
+Converted current 
+value
+-
+Rotation signal
+,
+SUM 
+value
+CR 
+character
+LF 
+character
+UTF-8
+HEX
+0x43
+0x48
+0x33
+0x3a
+0x33
+0x31
+0x30
+0x2d
+0x33
+0x30
+0x30
+0x30
+0x2c
+0xa8
+0x0d
+0x0a
+DATA
+C
+H
+3
+:
+3
+1
+0
+-
+3
+0
+0
+0
+,
+\r
+\n
+
+Calculation of SUM value: 0 × 43 + 0 × 48 + 0 × 31... + 0 × 30 + 0 × 2c = 0 × 2a8
+
+There is no corresponding character for SUM value "0xa8".
+
+--- Page 8 ---
+6
+EN
+ 3. Connection Diagram
+This is explained with DTM10 as an example.
+ CAUTION
+
+Make sure to properly connect the connection cord.
+
+If the PC to be connected does not have an RS-232C connector, use a device that converts the D-Sub9 pin to 
+USB, etc.
+Nitto Kohki has confirmed connectivity with the following product. (We do not provide support.)
+BSUSRC0610BS made by BUFFALO
+DTM10
+Connection cord
+Externally connected device
+(PC/PLC, etc.)
+Connection cord
+Electric screwdriver
+Controller
+Screw fastening monitor
+RS-232C
+communication cable
+
+--- Page 9 ---
+7
+EN
+4. How to Use
+Calculate the output torque (converted value) from the numerical data (converted current value) sent by the monitor.
+You can calculate the output torque (converted value) by sending the current value of the electric screwdriver motor to 
+the PC or PLC.
+To convert the converted current value to the output torque, it is necessary to calculate the torque conversion factor first.
+You can calculate the output torque (converted value) from the torque conversion factor by using the following formula.
+Output torque (converted value) = Converted current value × Torque conversion factor
+Here it is explained with DTM10 as an example.
+ CAUTION
+
+The calculated torque value is the output torque. It is not the fastening torque.
+Using a torque wrench, etc., make sure the screw is fastened at the target fastening torque by the loosening 
+torque method or refastening torque method.
+
+After confirming that the screw is fastened at the target torque using a suitable method, calculate the torque 
+conversion factor.
+
+Be sure to test more than once based on actual screw fastening conditions (screw, workpiece and other conditions).
+Perform the test periodically.
+
+When the torque or rotational speed of a current control type electric screwdriver is changed, measure the 
+conversion factor in each case.
+Conversion factor will be different for each setting. Measure the conversion factor several times.
+1 Fasten the screw with a torque checker (torque sensor) or workpiece.
+Fasten the screw several times while making sure the screw is fastened at the target torque.
+2 Record the converted current value.
+If you are using a torque checker (torque sensor), record the fastening torque.
+Torque checker (torque sensor)
+Output of screw 
+fastening monitor
+1st time 
+CH1: 305-410
+2nd time CH1: 310-405
+3rd time CH1: 295-420
+4th time...
+1st time 0.334 Nm
+2nd time 0.324 Nm
+3rd time 0.341 Nm
+4th time...
+Workpiece
+Output of screw 
+fastening monitor
+1st time 
+CH1: 402-1110
+2nd time CH1: 395-1140
+3rd time CH1: 415-1180
+4th time...
+Check that the 
+target torque is 
+achieved for all 
+screws.
+3 Calculate the torque conversion factor.
+Torque conversion factor =
+Output torque average (target value)
+Average of converted current value of screw fastening monitor
+
+--- Page 10 ---
+8
+EN
+E.g.: Calculation with a torque checker (torque sensor) (screw fastened 3 times)
+= 0.0010978022
+(0.334 + 0.324 + 0.341) ÷ 3
+(305 + 310 + 295) ÷ 3
+1st time
+↓
+2nd time
+↓
+3rd time
+↓
+Screw fastening frequency
+↓
+↑
+Torque conversion factor
+E.g.: Calculation with the target torque (target torque 1 Nm)
+= 0.0024752475
+1 Nm
+(402  +  395  +  415)  ÷  3
+↑
+1st time
+Target torque
+↓
+↑
+2nd time
+↑
+3rd time
+↑
+Screw fastening frequency
+Torque conversion factor
+↓
+4 Based on the torque conversion factor, calculate the output torque from the converted current 
+value at the time of actual screw fastening.
+When calculating the conversion factor with the torque 
+checker (torque sensor)
+When calculating the conversion factor with the 
+target torque
+Output of screw 
+fastening monitor
+CH1: 320-410
+Output of screw 
+fastening monitor
+CH1: 400-410
+320
+Converted 
+current value
+×
+=
+0.0010978022
+Torque conversion 
+factor
+0.351 Nm
+Output torque
+400
+Converted 
+current value
+×
+=
+0.0024752475
+Torque conversion 
+factor
+0.99 Nm
+Output torque
+How to Use
+
+--- Page 11 ---
+9
+EN
+Using time and rotation signal
+ CAUTION
+
+Rotation signal is output only by DTM45.
+
+DTM45 outputs time or rotation signal.
+You can select to output either of the two in "Measurement method" (MEASURE) of the common settings of the 
+controller (DCC0241X-AZ). For controller settings, check the instruction manual of DCC0241X-AZ.
+You can check whether the numerical values of time and rotation signal to be sent by the monitor are within the 
+maximum/minimum values of screw fastening to determine that the screw is fastened correctly.
+ CAUTION
+
+To fix the output numerical value, use the same operations method to perform the screw fastening.
+
+Periodically measure the time and rotation signal.
+
+The screw length or electric screwdriver speed may show individual differences. Also it changes due to the 
+effects of heating or mechanical loss, etc.
+Measure several times.
+
+Consider the screw length tolerance, workpiece individual differences, and operations scattering while setting 
+the electric screwdriver operation.
+Examples of setting the time are given below. Do the same for the rotation signal. (For example -10%/+10%)
+Screw fastening time lower limit value: -10% from minimum measured value
+E.g.) Minimum measured value 0.6 s → Set the screw fastening time lower limit value to 0.54 s
+Screw fastening time upper limit value: +10% from maximum measured value
+E.g.) Maximum measured value 0.7 s → Set the screw fastening time upper limit value to 0.77 s
+
+There is an error difference in time measurement of the controller and screw fastening monitor in DTM10.
+1 Perform screw fastening several times using the electric screwdriver and record the maximum and 
+minimum values of time and rotation signal sent by the monitor.
+The numerical data of time and rotation signal is sent by the monitor to a PC/PLC.
+Data is not sent if stoppage occurs before torque up or at reverse rotation.
+Calculate the upper and lower limit values of time and rotation signal from the minimum and maximum values.
+2 Check on the PC or PLC whether the time and rotation signal sent by the monitor are within the 
+maximum/minimum values of actual screw fastening.
+In the following conditions, screw fastening is considered as not done appropriately.
+Relation between the output data from the monitor and 
+the actual values
+Causes
+Lower limit value of time/rotation signal > Actual value
+Short screw, refastening, screw galling, etc.
+Upper limit value of time/rotation signal < Actual value
+Long screw fastened mistakenly, etc.
+Software for confirmation of output torque
+Nitto Kohki provides a software for PCs which can be used to confirm the output torque and save history. For details, 
+see our website.
+http://www.nitto-kohki.co.jp/e/
+
+--- Page 12 ---
+10
+EN
+5. Appendix
+ When an abnormality has occurred (Troubleshooting)
+Symptoms
+Location to investigate
+Solution
+Unable to receive data
+Is there a mistake, error, or a disconnection 
+in the RS-232C cable?
+Select an appropriate cable (cross or straight) 
+and check the connection.
+Is the communication setting done 
+appropriately?
+Review the communication setting on the PC 
+or PLC.
+The electric screwdriver 
+does not operate
+Is the connection cord connected to the 
+proper place?
+Check the connection of the connection cord.
+Maintenance and inspection
+ WARNING
+
+Always perform inspection before using the tool.
+
+Do not disassemble or alter the tool.
+
+Use genuine parts.
+ CAUTION
+
+For repair or part replacement, contact your dealer where you purchased the tool.
+Repairing requires special knowledge and skills. If repair is performed at a place other than a specialty store, the 
+tool may not demonstrate its full performance or it could lead to an accident or injury.
+
+Request repair with the failed status kept intact.
+When requesting a repair, do not throw away damaged parts. It could be important information for investigating 
+the cause of the failure so do not change the status.
+Inspection 
+locations
+Caution
+Cord
+Failure to perform inspection could result in fire or electric shock.
+
+Check if the cord is damaged and if found stop using the tool.
+
+Do not store the cord by wrapping it around the main unit. If it has been stored with the cable 
+wrapped around the main unit, immediately change the storage method.
+Main unit
+
+Check for damage, cracks or breaks on the main unit.
+Transmission data
+
+Check that the operation channel, converted current value and screw fastening time have not 
+changed.
+Maintenance
+
+If the main unit is stained, use a cloth soaked in soapy water and wrung out well to wipe off the 
+stains. The tool does not have a waterproof structure and if water enters inside it could fail.
+Disposal
+
+Separate power tools, accessories, and packing materials for environmentally-friendly recycling.
+
+Do not dispose of the power tool as household garbage.
+
+When disposing of electric tools, hand them over to Nitto Kohki or your dealer.
+
+--- Page 13 ---
+11
+EN
+Separately-sold products
+The following products are sold separately. To purchase these items, contact your dealer where you purchased your 
+electric screwdriver.
+Product name (model)
+Appearance
+Specifications, etc.
+Communication cable (straight)
+DLW9092
+Used for connection to PC/PLC 
+(p. 6)
+Communication cable (cross)
+DLW9093
+Glossary
+Term
+Description
+C
+Converted current value
+Motor current value at torque up (the torque reaches the set torque and the electric 
+screwdriver stops automatically) converted to a value between 0 to 4095
+L
+Loosening torque method
+Torque measurement method for measurement of torque value when the fastened screw is 
+loosened with a torque wrench, and the screw starts rotating
+O
+Operation channel
+Channel during operations (while settings are valid)
+P
+PLC
+(Programmable Logic Controller)
+Electronic device performing sequential control according to a program
+R
+Receptacle
+Connector for connecting the connection cord
+Refastening torque method
+Torque measurement method for measurement of torque value when the fastened screw is 
+further fastened with a torque wrench and the screw starts rotating again
+T
+Torque up
+The torque reaches the set torque and the screwdriver stops automatically
+Torque conversion factor
+Factor for calculating the output torque (converted value) from the converted current value
+Torque checker
+Torque measuring instrument
+
+--- Page 14 ---
+12
+EN
+External dimensions
+DTM10
+124 (4.88)
+63 (2.48)
+7.1 
+(0.28)
+(0.6 (0.02))
+LED protrusion
+30 (1.18)
+DTM45
+124 (4.88)
+63 (2.48)
+12.5 
+(0.49)
+(0.6 (0.02))
+LED protrusion
+30 (1.18)
+Appendix
+
+--- Page 15 ---
+13
+EN
+Back (common)
+96 (3.78)
+44 (1.73)
+13 
+(0.51)
+5 × M3 screw depth 3.5 (0.14)
+48 (1.89)
+27 (1.06)
+7.5 
+(0.3)
+
+--- Page 16 ---
+  Overseas Affiliates / Offices
+NITTO KOHKI U.S.A., INC.
+46 Chancellor Drive, Roselle, IL 60172, U.S.A.
+Tel: +1-630-924-9393 Fax: +1-630-924-0303
+NITTO KOHKI AUSTRALIA PTY.LTD.
+77 Brandl Street, Eight Mile Plains, Queensland 4113, Australia
+Tel: +61-7-3340-4600 Fax: +61-7-3340-4640
+NITTO KOHKI (SHANGHAI) CO., LTD.
+Room1506, Suite C, Orient International Plaza, No.85 
+Loushanguan Road, Shanghai 200336, China
+Tel: +86-21-6415-3935 Fax: +86-21-6472-6957
+NITTO KOHKI (SHANGHAI) CO.,LTD. Shenzhen Branch
+2005C Shenzhen ICC Tower, Fuhuasanlu 168, Futian District, 
+Shenzhen, Guangdong 518048, China
+Tel: +86-755-8375-2185 Fax: +86-755-8375-2187
+NITTTO KOHKI CO., LTD., Singapore Branch
+10 Ubi Crescent #01-62, Ubi Techpark Lobby D, Singapore 
+408564
+Tel: +65-6227-5360 Fax: +65-6227-0192
+NITTO KOHKI CO., LTD., Bangkok Representative 
+Office
+M&A Business Center, Q-House Convent Bldg., 38 Convent 
+Rd., Silom, Bangrak, Bangkok 10500, Thailand
+Tel: +66-2632-0307 Fax: +66-2632-0308
+NITTO KOHKI CO.,LTD. India Liaison Office
+3rd Floor, Building No.9-A DLF Cyber City, Phase-III,
+Gurgaon, Haryana 122002, India
+Tel: +91-124-454-5031 Fax: +65-6227-0192
+NITTO KOHKI CO.,LTD. Mexico Representative Office
+OF1109 Torre Corporativo 1 Piso 11 Central Park Armando 
+Birlain Shaffler #2001 Col Centro Sur, Queretaro, Qro, 
+C.P.76090, Mexico
+Tel: +52-442-290-1234
+NITTO KOHKI EUROPE GMBH
+Gottlieb-Daimler-Str. 10, 71144 Steinenbronn, Germany
+Tel: +49-7157-989555-0 Fax: +49-7157-989555-40
+NITTO KOHKI EUROPE GMBH UK BRANCH
+Unit A5, Langham Park Industrial Estate, Maple Road, Castle 
+Donington, Derbyshire DE74 2UT, U.K.
+Tel: +44-1332-653800 Fax: +44-1332-987273
+

@@ -1,0 +1,291 @@
+<UserControl x:Class="ScrewingHub.App.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BgPrimaryBrush}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
+        <StackPanel MaxWidth="900" HorizontalAlignment="Left">
+
+            <TextBlock Text="⚙ Settings" Style="{StaticResource HeaderText}" Margin="0,0,0,16"/>
+
+            <!-- ===== COM PORT SETTINGS ===== -->
+            <TextBlock Text="Serial Communication" Style="{StaticResource SubHeaderText}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- DTM10 -->
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="DTM10 Monitor" FontWeight="SemiBold" FontSize="13" 
+                                   Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,8"/>
+                        <TextBlock Text="COM Port" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                        <ComboBox ItemsSource="{Binding AvailablePorts}" SelectedItem="{Binding Dtm10Port}"
+                                  Style="{StaticResource ModernComboBox}" Margin="0,0,0,8"/>
+                        <TextBlock Text="Baud Rate (fixed: 38400)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                        <TextBox Text="{Binding Dtm10BaudRate}" Style="{StaticResource ModernTextBox}" IsReadOnly="True"/>
+                    </StackPanel>
+
+                    <!-- PLC -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Omron CJ2M PLC" FontWeight="SemiBold" FontSize="13"
+                                   Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,8"/>
+                        <TextBlock Text="COM Port" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                        <ComboBox ItemsSource="{Binding AvailablePorts}" SelectedItem="{Binding PlcPort}"
+                                  Style="{StaticResource ModernComboBox}" Margin="0,0,0,8"/>
+                        <TextBlock Text="Baud Rate" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                        <TextBox Text="{Binding PlcBaudRate}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,8"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Node Address" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                                <TextBox Text="{Binding PlcNodeAddress}" Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="DM Start Address" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                                <TextBox Text="{Binding PlcDmStartAddress}" Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Margin="0,8,0,0">
+                            <TextBlock Text="Heartbeat Interval (ms)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding PlcHeartbeatInterval}" Style="{StaticResource ModernTextBox}" Width="120" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,8,0,0">
+                            <TextBlock Text="Polling Interval (ms)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding PlcPollingInterval}" Style="{StaticResource ModernTextBox}" Width="120" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Button Content="↻ Refresh COM Ports" Command="{Binding RefreshPortsCommand}"
+                    Style="{StaticResource IconButton}" HorizontalAlignment="Left" Margin="0,0,0,16"/>
+
+            <!-- ===== MODEL A ===== -->
+            <TextBlock Text="Model A Configuration" Style="{StaticResource SubHeaderText}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Model Name" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelAName}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Station Name" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelAStationName}" Style="{StaticResource ModernTextBox}" ToolTip="Leave empty to use general station name"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Screw Name" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelAScrewName}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="6">
+                            <TextBlock Text="Screw Qty" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelAScrewCount}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Channel" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelAChannel}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Torque UL (kgf·cm)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelATorqueUpper}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Torque LL (kgf·cm)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelATorqueLower}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="6">
+                            <TextBlock Text="Time UL (ms)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelATimeUpper}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="8">
+                            <TextBlock Text="Time LL (ms)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelATimeLower}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel Margin="0,8,0,0">
+                        <TextBlock Text="Torque Conversion Factor" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                        <TextBox Text="{Binding ModelATorqueFactor}" Style="{StaticResource ModernTextBox}" Width="200" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== MODEL B ===== -->
+            <TextBlock Text="Model B Configuration" Style="{StaticResource SubHeaderText}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Model Name" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelBName}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Station Name" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelBStationName}" Style="{StaticResource ModernTextBox}" ToolTip="Leave empty to use general station name"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Screw Name" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelBScrewName}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="6">
+                            <TextBlock Text="Screw Qty" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelBScrewCount}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Channel" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelBChannel}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Torque UL (kgf·cm)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelBTorqueUpper}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Torque LL (kgf·cm)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelBTorqueLower}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="6">
+                            <TextBlock Text="Time UL (ms)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelBTimeUpper}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="8">
+                            <TextBlock Text="Time LL (ms)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding ModelBTimeLower}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel Margin="0,8,0,0">
+                        <TextBlock Text="Torque Conversion Factor" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                        <TextBox Text="{Binding ModelBTorqueFactor}" Style="{StaticResource ModernTextBox}" Width="200" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== DATA LOGGING ===== -->
+            <TextBlock Text="Data Logging" Style="{StaticResource SubHeaderText}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="CSV Log Folder" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                    <DockPanel Margin="0,0,0,8">
+                        <Button Content="📂" Command="{Binding BrowseCsvFolderCommand}" DockPanel.Dock="Right"
+                                Style="{StaticResource IconButton}" Margin="6,0,0,0"/>
+                        <TextBox Text="{Binding CsvLogFolder}" Style="{StaticResource ModernTextBox}"/>
+                    </DockPanel>
+                    <TextBlock Text="Log File Name Pattern (Accept/Reject/Raw)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                    <TextBox Text="{Binding CsvLogPattern}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,16" ToolTip="e.g. [Status]_[ModelNumber]_[Date]_[StationName].csv"/>
+
+                    <!-- ===== TEST DATA LOGGING ===== -->
+                    <TextBlock Text="🧪 Test Data Logging" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,8"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Model A -->
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Model A" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Accept" Command="{Binding TestLoggingCommand}" CommandParameter="1:Accept" Style="{StaticResource IconButton}" Padding="8,4" Margin="0,0,4,0"/>
+                                <Button Content="Reject" Command="{Binding TestLoggingCommand}" CommandParameter="1:Reject" Style="{StaticResource IconButton}" Padding="8,4" Margin="0,0,4,0"/>
+                                <Button Content="Raw"    Command="{Binding TestLoggingCommand}" CommandParameter="1:Raw"    Style="{StaticResource IconButton}" Padding="8,4"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Model B -->
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Model B" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Accept" Command="{Binding TestLoggingCommand}" CommandParameter="2:Accept" Style="{StaticResource IconButton}" Padding="8,4" Margin="0,0,4,0"/>
+                                <Button Content="Reject" Command="{Binding TestLoggingCommand}" CommandParameter="2:Reject" Style="{StaticResource IconButton}" Padding="8,4" Margin="0,0,4,0"/>
+                                <Button Content="Raw"    Command="{Binding TestLoggingCommand}" CommandParameter="2:Raw"    Style="{StaticResource IconButton}" Padding="8,4"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== GENERAL ===== -->
+            <TextBlock Text="General" Style="{StaticResource SubHeaderText}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Default Operator ID" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                        <TextBox Text="{Binding OperatorId}" Style="{StaticResource ModernTextBox}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="NG Alert Sound (.wav)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                        <DockPanel>
+                            <Button Content="📂" Command="{Binding BrowseNgSoundCommand}" DockPanel.Dock="Right"
+                                    Style="{StaticResource IconButton}" Margin="6,0,0,0"/>
+                            <TextBox Text="{Binding NgSoundFile}" Style="{StaticResource ModernTextBox}"/>
+                        </DockPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Save Button -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                <Button Content="💾 Save Settings" Command="{Binding SaveCommand}"
+                        Style="{StaticResource PrimaryButton}" Padding="24,10"/>
+                <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center" Margin="16,0,0,0"
+                           Foreground="{StaticResource TextSecondaryBrush}" FontSize="13"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,291 @@
+<UserControl x:Class="ScrewingHub.App.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:ScrewingHub.App.Converters"
+             Background="{StaticResource BgPrimaryBrush}">
+
+    <UserControl.Resources>
+        <converters:ConnectionStatusToColorConverter x:Key="ConnColorConv"/>
+        <converters:JudgmentToColorConverter x:Key="JudgColorConv"/>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisConv"/>
+        <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid Margin="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="240"/>
+        </Grid.RowDefinitions>
+
+        <!-- ===== LEFT PANEL ===== -->
+        <StackPanel Grid.Column="0" Grid.RowSpan="2" Margin="0,0,12,0">
+
+            <!-- Communication Status & Heartbeat (Back at top) -->
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,10">
+                <StackPanel>
+                    <Grid Margin="0,0,0,8">
+                        <TextBlock Text="COMMUNICATION" Style="{StaticResource SubHeaderText}"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                             <!-- Heartbeat visualization (Dot blinks) -->
+                             <TextBlock Text="Heartbeat" FontSize="9" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="{StaticResource TextMutedBrush}"/>
+                             <Ellipse Width="8" Height="8" VerticalAlignment="Center">
+                                 <Ellipse.Style>
+                                     <Style TargetType="Ellipse">
+                                         <Setter Property="Fill" Value="{StaticResource TextMutedBrush}"/>
+                                         <Style.Triggers>
+                                             <DataTrigger Binding="{Binding IsPlcHeartbeatActive}" Value="True">
+                                                 <Setter Property="Fill" Value="{StaticResource SuccessGreenBrush}"/>
+                                             </DataTrigger>
+                                         </Style.Triggers>
+                                     </Style>
+                                 </Ellipse.Style>
+                             </Ellipse>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- DTM10 -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                        <Ellipse Width="10" Height="10" Margin="0,0,8,0"
+                                 Fill="{Binding IsDtm10Connected, Converter={StaticResource ConnColorConv}}"/>
+                        <StackPanel>
+                            <TextBlock Text="DTM10" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                            <TextBlock Text="{Binding Dtm10PortInfo}" FontSize="10" Foreground="{StaticResource TextMutedBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- PLC -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <Ellipse Width="10" Height="10" Margin="0,0,8,0"
+                                 Fill="{Binding IsPlcConnected, Converter={StaticResource ConnColorConv}}"/>
+                        <StackPanel>
+                            <TextBlock Text="CJ2M PLC" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                            <TextBlock Text="{Binding PlcPortInfo}" FontSize="10" Foreground="{StaticResource TextMutedBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Button Content="Connect" Command="{Binding ConnectDevicesCommand}" 
+                            Style="{StaticResource PrimaryButton}" FontSize="11" Padding="10,5" Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Model Selection -->
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="MODEL" Style="{StaticResource SubHeaderText}" Margin="0,0,0,8"/>
+                    <ComboBox ItemsSource="{Binding AvailableModels}"
+                              SelectedItem="{Binding SelectedModel}"
+                              DisplayMemberPath="ModelName"
+                              Style="{StaticResource ModernComboBox}" Margin="0,0,0,6"/>
+                    <TextBlock Foreground="{StaticResource TextMutedBrush}" FontSize="11">
+                        <Run Text="Screws: "/><Run Text="{Binding TotalScrews, Mode=OneWay}"/>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <!-- Screw Progress -->
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="PROGRESS" Style="{StaticResource SubHeaderText}" Margin="0,0,0,8"/>
+                    <TextBlock Style="{StaticResource ValueText}" FontSize="22" HorizontalAlignment="Center" Margin="0,0,0,8">
+                        <Run Text="{Binding ScrewProgressText, Mode=OneWay}"/>
+                    </TextBlock>
+                    <ItemsControl ItemsSource="{Binding ScrewProgressItems}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="4" Padding="8,4" Margin="2"
+                                        Background="{Binding IsCompleted, Converter={StaticResource ConnColorConv}}">
+                                    <TextBlock Text="{Binding ScrewNumber}" FontSize="12" FontWeight="Bold"
+                                               Foreground="White" HorizontalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Button Content="↺ Reset Unit" Command="{Binding ResetUnitCommand}"
+                            Style="{StaticResource IconButton}" Margin="0,8,0,0"
+                            FontSize="11" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Statistics (Today) -->
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="TODAY STATS" Style="{StaticResource SubHeaderText}" Margin="0,0,0,8"/>
+                    
+                    <!-- Unit Stats -->
+                    <TextBlock Text="UNITS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,4"/>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="Total" Style="{StaticResource LabelText}"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding TodayUnitTotal}" Style="{StaticResource ValueText}" FontSize="13"/>
+                        <TextBlock Grid.Row="1" Text="OK" Style="{StaticResource LabelText}" Foreground="{StaticResource SuccessGreenBrush}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TodayUnitOk}" Style="{StaticResource ValueText}" FontSize="13" Foreground="{StaticResource SuccessGreenBrush}"/>
+                        <TextBlock Grid.Row="2" Text="NG" Style="{StaticResource LabelText}" Foreground="{StaticResource DangerRedBrush}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TodayUnitNg}" Style="{StaticResource ValueText}" FontSize="13" Foreground="{StaticResource DangerRedBrush}"/>
+                        <TextBlock Grid.Row="3" Text="Yield" Style="{StaticResource LabelText}"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding UnitPassRate}" Style="{StaticResource ValueText}" FontSize="13" Foreground="{StaticResource AccentBlueBrush}"/>
+                    </Grid>
+
+                    <Separator Background="{StaticResource TextMutedBrush}" Margin="0,0,0,10" Height="0.5" Opacity="0.3"/>
+
+                    <!-- Screw Stats -->
+                    <TextBlock Text="SCREW POINTS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,4"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="Total" Style="{StaticResource LabelText}"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding TodayScrewTotal}" Style="{StaticResource ValueText}" FontSize="13"/>
+                        <TextBlock Grid.Row="1" Text="OK" Style="{StaticResource LabelText}" Foreground="{StaticResource SuccessGreenBrush}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TodayScrewOk}" Style="{StaticResource ValueText}" FontSize="13" Foreground="{StaticResource SuccessGreenBrush}"/>
+                        <TextBlock Grid.Row="2" Text="NG" Style="{StaticResource LabelText}" Foreground="{StaticResource DangerRedBrush}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TodayScrewNg}" Style="{StaticResource ValueText}" FontSize="13" Foreground="{StaticResource DangerRedBrush}"/>
+                        <TextBlock Grid.Row="3" Text="Yield" Style="{StaticResource LabelText}"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ScrewPassRate}" Style="{StaticResource ValueText}" FontSize="13" Foreground="{StaticResource AccentBlueBrush}"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <!-- ===== CENTER: MAIN RESULT ===== -->
+        <Grid Grid.Column="1" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Result Details Row -->
+            <Border Style="{StaticResource CardBorder}" Grid.Row="0" Margin="0,0,0,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="STATION" Style="{StaticResource LabelText}"/>
+                        <TextBlock Text="{Binding SelectedModel.StationName}" Style="{StaticResource ValueText}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="OPERATOR" Style="{StaticResource LabelText}"/>
+                        <TextBlock Text="{Binding OperatorId}" Style="{StaticResource ValueText}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="WORK ORDER" Style="{StaticResource LabelText}"/>
+                        <TextBlock Text="{Binding WorkOrderNo}" Style="{StaticResource ValueText}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <TextBlock Text="CH" Style="{StaticResource LabelText}"/>
+                        <TextBlock Text="{Binding ChannelNumber}" Style="{StaticResource ValueText}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Center Result Gauge -->
+            <Border Style="{StaticResource CardBorder}" Grid.Row="1" Background="{StaticResource BgSecondaryBrush}">
+                <Grid>
+                    <!-- Background Flash Colors -->
+                    <Border Background="#22C55E" Opacity="0.2" Visibility="{Binding ShowOkFlash, Converter={StaticResource BoolToVisConv}}"/>
+                    <Border Background="#EF4444" Opacity="0.2" Visibility="{Binding ShowNgFlash, Converter={StaticResource BoolToVisConv}}"/>
+
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding JudgmentDisplay}" 
+                                   FontSize="72" FontWeight="Black"
+                                   Foreground="{Binding JudgmentColor}"
+                                   HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                        
+                        <TextBlock Text="{Binding TorqueDisplay}" 
+                                   FontSize="48" FontWeight="Bold"
+                                   Style="{StaticResource ValueText}"
+                                   HorizontalAlignment="Center"/>
+                        
+                        <TextBlock Text="{Binding ScrewTimeMs, StringFormat='{}{0} ms'}" 
+                                   FontSize="20" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextMutedBrush}"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Gauge Bar -->
+            <Border Style="{StaticResource CardBorder}" Grid.Row="2" Margin="0,10,0,0">
+                <StackPanel>
+                    <Grid Margin="0,0,0,4">
+                        <TextBlock Text="{Binding TorqueLowerLimit, StringFormat='{}LL (kgf·cm): {0:F3}'}" 
+                                   HorizontalAlignment="Left" Style="{StaticResource LabelText}"/>
+                        <TextBlock Text="GAUGE (kgf·cm)" HorizontalAlignment="Center" Style="{StaticResource LabelText}"/>
+                        <TextBlock Text="{Binding TorqueUpperLimit, StringFormat='{}UL (kgf·cm): {0:F3}'}" 
+                                   HorizontalAlignment="Right" Style="{StaticResource LabelText}"/>
+                    </Grid>
+                    
+                    <TextBlock Text="{Binding WarningText}" 
+                               Foreground="#EF4444" 
+                               HorizontalAlignment="Center" 
+                               FontWeight="Bold"
+                               Margin="0,0,0,4"
+                               Visibility="{Binding WarningText, Converter={StaticResource StringToVisibilityConverter}}"/>
+
+                    <Grid Height="24">
+                        <ProgressBar Value="{Binding GaugePercentage}" Minimum="0" Maximum="100"
+                                     Style="{StaticResource ModernProgressBar}"
+                                     Foreground="{Binding GaugeColor}"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ===== BOTTOM: RECENT LOG TABLE ===== -->
+        <Border Style="{StaticResource CardBorder}" Grid.Column="1" Grid.Row="1" Margin="0,10,0,0">
+            <DockPanel>
+                <TextBlock Text="RECENT LOG" Style="{StaticResource SubHeaderText}" DockPanel.Dock="Top" Margin="0,0,0,8"/>
+                <DataGrid ItemsSource="{Binding RecentResults}" Style="{StaticResource ModernDataGrid}"
+                          ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding RecordNumber}" Width="35"/>
+                        <DataGridTextColumn Header="Time" Binding="{Binding Timestamp, StringFormat=HH:mm:ss}" Width="75"/>
+                        <DataGridTextColumn Header="Model" Binding="{Binding ModelName}" Width="100"/>
+                        <DataGridTextColumn Header="CH" Binding="{Binding Channel}" Width="40"/>
+                        <DataGridTextColumn Header="Value (Raw)" Binding="{Binding RawCurrentValue}" Width="75"/>
+                        <DataGridTextColumn Header="Torque (kgf-cm)" Binding="{Binding ConvertedTorque, StringFormat=F3}" Width="110"/>
+                        <DataGridTextColumn Header="Time(ms)" Binding="{Binding ScrewTimeMs}" Width="70"/>
+                        <DataGridTextColumn Header="Screw" Binding="{Binding ScrewProgress}" Width="60"/>
+                        <DataGridTextColumn Header="Judge" Binding="{Binding Judgment}" Width="60">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Foreground" Value="{Binding Judgment, Converter={StaticResource JudgColorConv}}"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="PLC" Binding="{Binding PlcStatus}" Width="60"/>
+                        <DataGridTextColumn Header="Remarks" Binding="{Binding Remarks}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>
