@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Windows;
 using System.Windows.Media;
@@ -29,12 +31,17 @@ public partial class DashboardViewModel : ObservableObject
     private IPlcClient? _plcClient;
     private System.Media.SoundPlayer? _ngSoundPlayer;
     private DispatcherTimer? _flashTimer;
+    private readonly Stopwatch _cycleStopwatch = new();
+    private readonly DispatcherTimer _cycleTimer = new();
 
     // ===== CONNECTION STATUS =====
     [ObservableProperty] private bool _isDtm10Connected;
     [ObservableProperty] private string _dtm10PortInfo = "Not connected";
     [ObservableProperty] private bool _isPlcConnected;
     [ObservableProperty] private string _plcPortInfo = "Not connected";
+
+    public string ConnectionButtonText => (IsDtm10Connected || IsPlcConnected) ? "Disconnect" : "Connect";
+    public bool IsAnyDeviceConnected => IsDtm10Connected || IsPlcConnected;
 
     // ===== CURRENT RESULT =====
     [ObservableProperty] private string _judgmentDisplay = "---";
@@ -62,7 +69,8 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private string _screwProgressText = "0/0";
     [ObservableProperty] private ObservableCollection<ScrewProgressItem> _screwProgressItems = new();
 
-    // ===== STATISTICS (Unit Qty) =====
+    // ===== STATISTICS (Shift) =====
+    [ObservableProperty] private string _currentShiftName = "---";
     [ObservableProperty] private int _todayUnitTotal;
     [ObservableProperty] private int _todayUnitOk;
     [ObservableProperty] private int _todayUnitNg;
@@ -81,6 +89,8 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private string _operatorId = string.Empty;
     [ObservableProperty] private string _workOrderNo = string.Empty;
     [ObservableProperty] private string _warningText = string.Empty;
+    [ObservableProperty] private string _cycleTimeDisplay = "00:00.0";
+    [ObservableProperty] private string _prevCycleTimeDisplay = "00:00.0";
 
     public DashboardViewModel(
         IJudgmentService judgmentService,
@@ -94,7 +104,69 @@ public partial class DashboardViewModel : ObservableObject
         _configService = configService;
 
         LoadModels();
-        LoadTodayStats();
+        
+        // Initialize cycle timer
+        _cycleTimer.Interval = TimeSpan.FromMilliseconds(100);
+        _cycleTimer.Tick += (s, e) => {
+            if (_cycleStopwatch.IsRunning)
+            {
+                var ts = _cycleStopwatch.Elapsed;
+                CycleTimeDisplay = $"{ts.Minutes:D2}:{ts.Seconds:D2}.{ts.Milliseconds / 100:D1}";
+            }
+        };
+        _cycleTimer.Start();
+
+        // Initialize shift monitor
+        UpdateShiftName();
+        LoadShiftStats();
+        
+        var shiftMonitor = new DispatcherTimer { Interval = TimeSpan.FromMinutes(1) };
+        shiftMonitor.Tick += (s, e) => CheckShiftChange();
+        shiftMonitor.Start();
+    }
+
+    private DateTime _currentShiftStart;
+    private DateTime _currentShiftEnd;
+
+    private void CheckShiftChange()
+    {
+        var now = DateTime.Now;
+        if (now < _currentShiftStart || now >= _currentShiftEnd)
+        {
+            Logger.Information("Shift change detected! Refreshing stats.");
+            UpdateShiftName();
+            LoadShiftStats();
+        }
+    }
+
+    private void UpdateShiftName()
+    {
+        var range = GetCurrentShiftRange();
+        _currentShiftStart = range.Start;
+        _currentShiftEnd = range.End;
+        
+        // Determing name: 08:00 to 20:30 is Morning
+        CurrentShiftName = (range.Start.Hour == 8) ? "MORNING SHIFT" : "NIGHT SHIFT";
+    }
+
+    public (DateTime Start, DateTime End) GetCurrentShiftRange()
+    {
+        var now = DateTime.Now;
+        var morningStart = now.Date.AddHours(8);
+        var nightStart = now.Date.AddHours(20).AddMinutes(30);
+
+        if (now >= morningStart && now < nightStart)
+        {
+            return (morningStart, nightStart);
+        }
+        else if (now >= nightStart)
+        {
+            return (nightStart, now.Date.AddDays(1).AddHours(8));
+        }
+        else
+        {
+            return (now.Date.AddDays(-1).AddHours(20).AddMinutes(30), morningStart);
+        }
     }
 
     private void LoadModels()
@@ -130,6 +202,9 @@ public partial class DashboardViewModel : ObservableObject
             }
             
             Logger.Information("Model changed to: {Model}", value.ModelName);
+
+            // Start cycle time for the first unit
+            _cycleStopwatch.Restart();
         }
     }
 
@@ -145,6 +220,7 @@ public partial class DashboardViewModel : ObservableObject
         {
             _plcClient.ConnectionChanged -= OnPlcConnectionChanged;
             _plcClient.ResetRequestReceived -= OnPlcResetRequest;
+            _plcClient.ScrewFloatingDetected -= OnPlcScrewFloatingDetected;
             _plcClient.HeartbeatSent -= OnPlcHeartbeatSent;
         }
 
@@ -161,6 +237,7 @@ public partial class DashboardViewModel : ObservableObject
         {
             _plcClient.ConnectionChanged += OnPlcConnectionChanged;
             _plcClient.ResetRequestReceived += OnPlcResetRequest;
+            _plcClient.ScrewFloatingDetected += OnPlcScrewFloatingDetected;
             _plcClient.HeartbeatSent += OnPlcHeartbeatSent;
         }
     }
@@ -193,6 +270,8 @@ public partial class DashboardViewModel : ObservableObject
             Dtm10PortInfo = connected
                 ? $"{settings.PortName}:{settings.BaudRate}"
                 : "Disconnected";
+            OnPropertyChanged(nameof(ConnectionButtonText));
+            OnPropertyChanged(nameof(IsAnyDeviceConnected));
         });
     }
 
@@ -205,6 +284,8 @@ public partial class DashboardViewModel : ObservableObject
             PlcPortInfo = connected
                 ? $"{settings.PortName}:{settings.BaudRate}"
                 : "Disconnected";
+            OnPropertyChanged(nameof(ConnectionButtonText));
+            OnPropertyChanged(nameof(IsAnyDeviceConnected));
         });
     }
 
@@ -213,6 +294,15 @@ public partial class DashboardViewModel : ObservableObject
         await Application.Current?.Dispatcher.InvokeAsync(async () =>
         {
             await PerformResetAsync("PLC Signal (Loose)");
+        });
+    }
+
+    private async void OnPlcScrewFloatingDetected(object? sender, EventArgs e)
+    {
+        await Application.Current?.Dispatcher.InvokeAsync(async () =>
+        {
+            TriggerFlash(JudgmentStatus.NG);
+            await PerformResetAsync("PLC Screw Floating (NG)");
         });
     }
 
@@ -266,7 +356,11 @@ public partial class DashboardViewModel : ObservableObject
             // Check if we reached ACCEPT or REJECT conditions
             if (result.Judgment == JudgmentStatus.NG)
             {
-                // Immediate REJECT - Stop sequence and reset
+                // Immediate REJECT - Capture and restart for next unit
+                _cycleStopwatch.Stop();
+                PrevCycleTimeDisplay = CycleTimeDisplay;
+                _cycleStopwatch.Restart();
+
                 await _unitLogService.LogUnitAsync("Reject", new List<JudgmentResult>(_currentAssemblyBatch));
                 
                 // Update stats
@@ -280,6 +374,11 @@ public partial class DashboardViewModel : ObservableObject
             else if (result.Judgment == JudgmentStatus.OK && _tracker.AllScrewsComplete)
             {
                 // Sequence completed successfully -> ACCEPT
+                // Capture and restart for next unit
+                _cycleStopwatch.Stop();
+                PrevCycleTimeDisplay = CycleTimeDisplay;
+                _cycleStopwatch.Restart();
+
                 await _unitLogService.LogUnitAsync("Accept", new List<JudgmentResult>(_currentAssemblyBatch));
                 
                 // Update stats
@@ -474,11 +573,49 @@ public partial class DashboardViewModel : ObservableObject
 
     private async Task PerformResetAsync(string reason)
     {
-        if (_currentAssemblyBatch.Count > 0)
+        // Count as reject if there are screws completed, OR if this is a PLC signal (intentional abort/NG)
+        bool shouldCountAsReject = _currentAssemblyBatch.Count > 0 
+            || reason == "PLC Signal (Loose)" 
+            || reason == "PLC Screw Floating (NG)";
+
+        if (shouldCountAsReject)
         {
-            Logger.Information("Unit reset requested via {Reason} with {Count} screws completed. Saving as Reject.", reason, _currentAssemblyBatch.Count);
-            // Log as reject since work was in progress
-            await _unitLogService.LogUnitAsync("Reject", new List<JudgmentResult>(_currentAssemblyBatch));
+            Logger.Information("Unit reset requested via {Reason}. Saving as Reject.", reason);
+            
+            // Add remark to current batch results
+            foreach (var res in _currentAssemblyBatch)
+            {
+                if (string.IsNullOrEmpty(res.Remarks)) res.Remarks = reason;
+                else res.Remarks += $"; {reason}";
+            }
+
+            var resultsToLog = new List<JudgmentResult>(_currentAssemblyBatch);
+            if (resultsToLog.Count == 0 && SelectedModel != null)
+            {
+                // Create a dummy result for the first screw so we can log the reject correctly
+                var dummy = new JudgmentResult
+                {
+                    Judgment = JudgmentStatus.NG,
+                    JudgmentDetail = $"Abort via {reason}",
+                    Remarks = reason,
+                    Channel = SelectedModel.Channels.FirstOrDefault()?.ChannelNumber ?? 1,
+                    ScrewNumber = 1,
+                    TotalScrews = SelectedModel.TotalScrewCount,
+                    ModelName = SelectedModel.ModelName,
+                    StationName = SelectedModel.StationName,
+                    ModelId = SelectedModel.ModelId,
+                    OperatorId = OperatorId,
+                    WorkOrderNo = WorkOrderNo,
+                    Timestamp = DateTime.Now
+                };
+                resultsToLog.Add(dummy);
+                
+                // Add to UI as well
+                Application.Current?.Dispatcher.Invoke(() => AddToRecentLog(dummy));
+            }
+
+            // Log as reject since work was in progress or intentionally aborted
+            await _unitLogService.LogUnitAsync("Reject", resultsToLog);
             
             // Update stats
             Application.Current?.Dispatcher.Invoke(() => UpdateUnitStatistics("Reject"));
@@ -497,16 +634,20 @@ public partial class DashboardViewModel : ObservableObject
         GaugePercentage = 0;
         GaugeColor = System.Windows.Media.Brushes.DodgerBlue;
         Logger.Information("Unit reset processed: {Reason}", reason);
+
+        // Restart cycle time for the next attempt
+        _cycleStopwatch.Restart();
     }
 
-    private void LoadTodayStats()
+    private void LoadShiftStats()
     {
-        // Load detailed stats from logs
+        var range = GetCurrentShiftRange();
+        
         Task.Run(async () =>
         {
-            var records = await _csvLogService.ReadLogAsync(DateTime.Today);
-            int unitOk = _csvLogService.GetTodayUnitCount("Accept");
-            int unitNg = _csvLogService.GetTodayUnitCount("Reject");
+            var records = await _csvLogService.ReadLogRangeAsync(range.Start, range.End);
+            int unitOk = _csvLogService.GetUnitCountInRange(range.Start, range.End, "Accept");
+            int unitNg = _csvLogService.GetUnitCountInRange(range.Start, range.End, "Reject");
 
             Application.Current?.Dispatcher.Invoke(() =>
             {
@@ -526,10 +667,23 @@ public partial class DashboardViewModel : ObservableObject
                     ? $"{(double)TodayUnitOk / TodayUnitTotal * 100:F1}%"
                     : "0.0%";
                 
-                Logger.Information("Initial stats loaded: Units={UTotal}({UOk}/{UNg}), Screws={STotal}({SOk}/{SNg})",
-                    TodayUnitTotal, TodayUnitOk, TodayUnitNg, TodayScrewTotal, TodayScrewOk, TodayScrewNg);
+                Logger.Information("Shift stats loaded: {Name} ({Start} - {End}), Units={UTotal}({UOk}/{UNg})",
+                    CurrentShiftName, range.Start, range.End, TodayUnitTotal, TodayUnitOk, TodayUnitNg);
             });
         });
+    }
+
+    [RelayCommand]
+    private async Task ToggleConnection()
+    {
+        if (IsDtm10Connected || IsPlcConnected)
+        {
+            await DisconnectDevices();
+        }
+        else
+        {
+            await ConnectDevices();
+        }
     }
 
     [RelayCommand]

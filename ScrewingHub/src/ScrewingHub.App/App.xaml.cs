@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ScrewingHub.App.ViewModels;
 using ScrewingHub.Communication.Dtm10;
 using ScrewingHub.Communication.OmronPlc;
+using ScrewingHub.Communication.Common;
 using ScrewingHub.Core.Interfaces;
 using ScrewingHub.Core.Services;
 using Serilog;
@@ -75,10 +76,13 @@ public partial class App : Application
                     configService.Settings.ReconnectIntervalMs);
             });
 
+            services.AddSingleton<ITorqueMeterClient, TorqueMeterClient>();
+
             // ViewModels
             services.AddSingleton<DashboardViewModel>();
             services.AddSingleton<SettingsViewModel>();
             services.AddSingleton<HistoryViewModel>();
+            services.AddSingleton<CalibrationViewModel>();
 
             // Main Window
             services.AddSingleton<MainWindow>();

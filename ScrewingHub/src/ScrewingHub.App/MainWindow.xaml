@@ -8,7 +8,8 @@
         MinHeight="700" MinWidth="1100"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
-        Background="{StaticResource BgPrimaryBrush}">
+        Background="{StaticResource BgPrimaryBrush}"
+        Closing="Window_Closing">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -40,6 +41,10 @@
                                  GroupName="NavGroup"
                                  Style="{StaticResource NavRadioButton}"
                                  Checked="NavButton_Checked"/>
+                    <RadioButton x:Name="NavCalibration" Content="🔧 Calibration"
+                                 GroupName="NavGroup"
+                                 Style="{StaticResource NavRadioButton}"
+                                 Checked="NavButton_Checked"/>
                 </StackPanel>
 
                 <!-- Spacer -->
@@ -52,6 +57,7 @@
             <views:DashboardView x:Name="DashboardPage" Visibility="Visible"/>
             <views:HistoryView x:Name="HistoryPage" Visibility="Collapsed"/>
             <views:SettingsView x:Name="SettingsPage" Visibility="Collapsed"/>
+            <views:CalibrationView x:Name="CalibrationPage" Visibility="Collapsed"/>
         </Grid>
     </Grid>
 </Window>

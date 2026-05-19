@@ -16,6 +16,17 @@ public class AppSettings
         Handshake = "None"
     };
 
+    // Torque Meter serial settings
+    public SerialSettings TorqueMeterSerial { get; set; } = new()
+    {
+        PortName = "COM5",
+        BaudRate = 9600,
+        DataBits = 8,
+        Parity = "None",
+        StopBits = "One",
+        Handshake = "None"
+    };
+
     // PLC serial settings
     public PlcSerialSettings PlcSerial { get; set; } = new()
     {

@@ -32,4 +32,16 @@ public interface ICsvLogService
     /// Gets the count of finalized units for today (Accept or Reject).
     /// </summary>
     int GetTodayUnitCount(string status);
+
+    /// <summary>
+    /// Gets the count of finalized units within a specific time range.
+    /// Handles cross-day queries.
+    /// </summary>
+    int GetUnitCountInRange(DateTime start, DateTime end, string status);
+
+    /// <summary>
+    /// Reads all records within a specific time range.
+    /// Handles cross-day queries.
+    /// </summary>
+    Task<List<JudgmentResult>> ReadLogRangeAsync(DateTime start, DateTime end);
 }

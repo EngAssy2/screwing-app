@@ -22,6 +22,9 @@ public interface IPlcClient : ISerialDevice
     /// <summary>Raised when the PLC requests a cycle reset (e.g. DM 1000 == 1).</summary>
     event EventHandler? ResetRequestReceived;
 
+    /// <summary>Raised when the PLC detects a screw floating status (e.g. DM 1002 == 1).</summary>
+    event EventHandler? ScrewFloatingDetected;
+
     /// <summary>Raised when a heartbeat signal is successfully sent to the PLC.</summary>
     event EventHandler? HeartbeatSent;
 }

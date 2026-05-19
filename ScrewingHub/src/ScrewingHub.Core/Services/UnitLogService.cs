@@ -74,13 +74,13 @@ public class UnitLogService : IUnitLogService
                     {
                         sbHeader.Append($",Pt{i}");
                     }
-                    sbHeader.Append(",Result");
+                    sbHeader.Append(",Result,Remarks");
                     writer.WriteLine(sbHeader.ToString());
                 }
 
                 // Data Row
                 var sbData = new StringBuilder();
-                sbData.Append($"{DateTime.Now.ToString("dd/MM/yyyy HH:mm")},");
+                sbData.Append($"{DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")},");
 
                 double totalDuration = batch.Sum(x => x.ScrewTimeMs) / 1000.0;
                 sbData.Append($"{totalDuration:F6}");
@@ -99,7 +99,8 @@ public class UnitLogService : IUnitLogService
                     }
                 }
 
-                sbData.Append($",{status.ToUpper()}");
+                var remarks = string.Join("; ", batch.Select(x => x.Remarks).Where(r => !string.IsNullOrEmpty(r)).Distinct());
+                sbData.Append($",{status.ToUpper()},{remarks}");
                 writer.WriteLine(sbData.ToString());
                 writer.Flush();
             }

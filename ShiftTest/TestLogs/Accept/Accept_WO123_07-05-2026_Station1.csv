@@ -1,0 +1,7 @@
+﻿DUPLO Journey Screwing Process Station 1 : WO123
+ID,Description,LSL,USL,Unit
+Pt1,Screwing 1,1.000,2.000,kgf·cm
+
+Date and Time,Duration(sec),Pt1,Result,Remarks
+07/05/2026 09:00:00,0.500000,1.50,ACCEPT,
+07/05/2026 10:00:00,0.500000,1.50,ACCEPT,

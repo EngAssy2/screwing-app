@@ -31,8 +31,8 @@
                         <TextBlock Text="COMMUNICATION" Style="{StaticResource SubHeaderText}"/>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                              <!-- Heartbeat visualization (Dot blinks) -->
-                             <TextBlock Text="Heartbeat" FontSize="9" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="{StaticResource TextMutedBrush}"/>
-                             <Ellipse Width="8" Height="8" VerticalAlignment="Center">
+                             <TextBlock Text="HB" FontSize="11" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="{StaticResource TextMutedBrush}"/>
+                             <Ellipse Width="20" Height="20" VerticalAlignment="Center">
                                  <Ellipse.Style>
                                      <Style TargetType="Ellipse">
                                          <Setter Property="Fill" Value="{StaticResource TextMutedBrush}"/>
@@ -67,8 +67,18 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <Button Content="Connect" Command="{Binding ConnectDevicesCommand}" 
-                            Style="{StaticResource PrimaryButton}" FontSize="11" Padding="10,5" Margin="0,4,0,0"/>
+                    <Button Content="{Binding ConnectionButtonText}" Command="{Binding ToggleConnectionCommand}" 
+                            FontSize="11" Padding="10,5" Margin="0,4,0,0">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsAnyDeviceConnected}" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource SuccessGreenBrush}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                 </StackPanel>
             </Border>
 
@@ -109,16 +119,17 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+
                     <Button Content="↺ Reset Unit" Command="{Binding ResetUnitCommand}"
                             Style="{StaticResource IconButton}" Margin="0,8,0,0"
                             FontSize="11" HorizontalAlignment="Left"/>
                 </StackPanel>
             </Border>
 
-            <!-- Statistics (Today) -->
+            <!-- Statistics (Shift) -->
             <Border Style="{StaticResource CardBorder}" Margin="0,0,0,10">
                 <StackPanel>
-                    <TextBlock Text="TODAY STATS" Style="{StaticResource SubHeaderText}" Margin="0,0,0,8"/>
+                    <TextBlock Text="{Binding CurrentShiftName}" Style="{StaticResource SubHeaderText}" Margin="0,0,0,8"/>
                     
                     <!-- Unit Stats -->
                     <TextBlock Text="UNITS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,4"/>
@@ -187,20 +198,26 @@
 
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="STATION" Style="{StaticResource LabelText}"/>
-                        <TextBlock Text="{Binding SelectedModel.StationName}" Style="{StaticResource ValueText}"/>
+                        <TextBlock Text="{Binding SelectedModel.StationName}" Style="{StaticResource ValueText}" FontSize="36"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="OPERATOR" Style="{StaticResource LabelText}"/>
-                        <TextBlock Text="{Binding OperatorId}" Style="{StaticResource ValueText}"/>
+                        <TextBlock Text="CURRENT CT" Style="{StaticResource LabelText}" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding CycleTimeDisplay}" Style="{StaticResource ValueText}" 
+                                   FontSize="36" Foreground="{StaticResource AccentBlueBrush}"
+                                   HorizontalAlignment="Center"/>
                     </StackPanel>
                     <StackPanel Grid.Column="2">
-                        <TextBlock Text="WORK ORDER" Style="{StaticResource LabelText}"/>
-                        <TextBlock Text="{Binding WorkOrderNo}" Style="{StaticResource ValueText}"/>
+                        <TextBlock Text="PREV CT" Style="{StaticResource LabelText}" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding PrevCycleTimeDisplay}" Style="{StaticResource ValueText}" 
+                                   FontSize="28" Foreground="{StaticResource TextSecondaryBrush}"
+                                   HorizontalAlignment="Center"/>
                     </StackPanel>
                     <StackPanel Grid.Column="3">
-                        <TextBlock Text="CH" Style="{StaticResource LabelText}"/>
-                        <TextBlock Text="{Binding ChannelNumber}" Style="{StaticResource ValueText}"/>
+                        <TextBlock Text="CH" Style="{StaticResource LabelText}" HorizontalAlignment="Right"/>
+                        <TextBlock Text="{Binding ChannelNumber}" Style="{StaticResource ValueText}"
+                                   FontSize="36" HorizontalAlignment="Right"/>
                     </StackPanel>
+
                 </Grid>
             </Border>
 

@@ -77,12 +77,16 @@ public class JudgmentService : IJudgmentService
                 reasons.Add($"Time {data.ScrewTimeMs}ms below lower limit {channelConfig.TimeLowerLimitMs}ms");
 
             result.JudgmentDetail = string.Join("; ", reasons);
+            result.Remarks = result.JudgmentDetail; // Store details in remarks for better visibility in logs
         }
 
         // Checksum validation
         if (!data.IsChecksumValid)
         {
-            result.Remarks = "Warning: DTM10 checksum invalid";
+            string checksumWarning = "Warning: DTM10 checksum invalid";
+            if (string.IsNullOrEmpty(result.Remarks)) result.Remarks = checksumWarning;
+            else result.Remarks += $"; {checksumWarning}";
+            
             Logger.Warning("Checksum invalid for CH{Channel} data", data.Channel);
         }
 

@@ -1,10 +1,23 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
 namespace ScrewingHub.Core.Models;
 
 /// <summary>
 /// Result of the OK/NG judgment for a single screw fastening.
 /// </summary>
-public class JudgmentResult
+public class JudgmentResult : INotifyPropertyChanged
 {
+    private string _remarks = string.Empty;
+    private PlcSendStatus _plcStatus = PlcSendStatus.Pending;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
     public int RecordNumber { get; set; }
     public DateTime Timestamp { get; set; } = DateTime.Now;
 
@@ -38,12 +51,21 @@ public class JudgmentResult
     public string JudgmentDetail { get; set; } = string.Empty;
 
     // PLC communication
-    public PlcSendStatus PlcStatus { get; set; } = PlcSendStatus.Pending;
+    public PlcSendStatus PlcStatus
+    {
+        get => _plcStatus;
+        set { if (_plcStatus != value) { _plcStatus = value; OnPropertyChanged(); } }
+    }
 
     // Operator info
     public string OperatorId { get; set; } = string.Empty;
     public string WorkOrderNo { get; set; } = string.Empty;
-    public string Remarks { get; set; } = string.Empty;
+
+    public string Remarks
+    {
+        get => _remarks;
+        set { if (_remarks != value) { _remarks = value; OnPropertyChanged(); } }
+    }
 
     /// <summary>Display string for screw progress, e.g., "2/4".</summary>
     public string ScrewProgress => $"{ScrewNumber}/{TotalScrews}";

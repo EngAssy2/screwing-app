@@ -1,0 +1,137 @@
+<UserControl x:Class="ScrewingHub.App.Views.CalibrationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="clr-namespace:ScrewingHub.App.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:CalibrationViewModel}"
+             Background="{StaticResource BgPrimaryBrush}"
+             d:DesignHeight="700" d:DesignWidth="1100">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
+        <StackPanel MaxWidth="900" HorizontalAlignment="Left">
+
+            <TextBlock Text="🔧 Torque Calibration" Style="{StaticResource HeaderText}" Margin="0,0,0,16"/>
+
+            <!-- ===== TORQUE METER CONNECTION ===== -->
+            <TextBlock Text="USB Torque Meter Connection (Optional)" Style="{StaticResource SubHeaderText}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="COM Port:" Style="{StaticResource LabelText}" VerticalAlignment="Center" Margin="0,0,12,8"/>
+                        <ComboBox Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernComboBox}" Width="150" Margin="0,0,12,8"
+                                  ItemsSource="{Binding AvailablePorts}" 
+                                  SelectedItem="{Binding SelectedPort}"/>
+                        
+                        <Button Grid.Row="0" Grid.Column="2" Content="↻ Refresh Ports" Style="{StaticResource IconButton}" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                Command="{Binding RefreshPortsCommand}"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Status:" Style="{StaticResource LabelText}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ConnectionStatus}" FontWeight="Bold" 
+                                   VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        
+                        <Button Grid.Row="1" Grid.Column="2" 
+                                Content="Connect / Disconnect" 
+                                Command="{Binding ToggleConnectionCommand}"
+                                Width="150" HorizontalAlignment="Left"
+                                Style="{StaticResource PrimaryButton}"/>
+                    </Grid>
+                    
+                    <TextBlock Text="Connect your Hios or Quick torque meter via USB to automatically capture the 'Actual Torque' reading." 
+                               Foreground="{StaticResource TextMutedBrush}" FontStyle="Italic" Margin="0,12,0,0" FontSize="12"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== CALIBRATION DATA ===== -->
+            <TextBlock Text="Calibration Data Collection" Style="{StaticResource SubHeaderText}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Collect at least 5 readings to calculate the average torque conversion factor." 
+                               Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,12" FontSize="12"/>
+                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220"/>
+                            <ColumnDefinition Width="220"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Actual Torque -->
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Actual Torque (kgf·cm)" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                        <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding PendingActualTorque, UpdateSourceTrigger=PropertyChanged}" 
+                                 Style="{StaticResource ModernTextBox}" Width="180" HorizontalAlignment="Left" Margin="0,0,24,16"/>
+
+                        <!-- Raw Current Value -->
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="DTM10 Raw Current Value" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding PendingRawCurrentValue, UpdateSourceTrigger=PropertyChanged}" 
+                                 Style="{StaticResource ModernTextBox}" Width="180" HorizontalAlignment="Left" Margin="0,0,24,16"/>
+
+                        <!-- Action Buttons -->
+                        <Button Grid.Row="1" Grid.Column="2" Content="➕ Add Data Point" Style="{StaticResource PrimaryButton}" 
+                                Command="{Binding AddPointCommand}" Width="150" VerticalAlignment="Top" Margin="0,0,12,0"/>
+                    </Grid>
+
+                    <DataGrid ItemsSource="{Binding CalibrationPoints}" SelectedItem="{Binding SelectedPoint}"
+                              Style="{StaticResource ModernDataGrid}" 
+                              ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                              MaxHeight="250" Margin="0,0,0,12">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
+                            <DataGridTextColumn Header="Actual Torque (kgf·cm)" Binding="{Binding ActualTorque, StringFormat=F3}" Width="180"/>
+                            <DataGridTextColumn Header="Raw Value" Binding="{Binding RawCurrentValue}" Width="120"/>
+                            <DataGridTextColumn Header="Calculated Factor" Binding="{Binding Factor, StringFormat=F6}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Remove Selected Point" Style="{StaticResource IconButton}" 
+                                Command="{Binding RemoveSelectedPointCommand}" Margin="0,0,12,0"/>
+                        <Button Content="Clear All Data" Style="{StaticResource PrimaryButton}" 
+                                Command="{Binding ClearDataCommand}" Width="120" Background="{StaticResource BgSecondaryBrush}" Foreground="{StaticResource TextPrimaryBrush}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== CALCULATED RESULT & APPLICATION ===== -->
+            <TextBlock Text="Calculated Result" Style="{StaticResource SubHeaderText}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <Button Content="Calculate Average Factor" Style="{StaticResource PrimaryButton}" 
+                            Command="{Binding CalculateFactorCommand}" Width="200" HorizontalAlignment="Left" Margin="0,0,0,16"/>
+                    
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <TextBlock Text="Torque Conversion Factor: " Style="{StaticResource LabelText}" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding CalculatedFactor, StringFormat=F6, TargetNullValue='---'}" 
+                                   FontWeight="Bold" FontSize="20" Foreground="{StaticResource AccentBlueBrush}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Save to Model A" Style="{StaticResource PrimaryButton}" Width="150" Margin="0,0,12,0"
+                                Command="{Binding ApplyToModelCommand}" CommandParameter="A"/>
+                        <Button Content="Save to Model B" Style="{StaticResource PrimaryButton}" Width="150" Margin="0,0,12,0"
+                                Command="{Binding ApplyToModelCommand}" CommandParameter="B"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Status -->
+            <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource TextMutedBrush}" Margin="0,16,0,0"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

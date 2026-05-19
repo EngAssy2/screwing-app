@@ -197,6 +197,120 @@ public class CsvLogService : ICsvLogService
         return await Task.FromResult(results.OrderBy(r => r.Timestamp).ToList());
     }
 
+    public int GetUnitCountInRange(DateTime start, DateTime end, string status)
+    {
+        try
+        {
+            var dirPath = Path.Combine(_logFolder, status);
+            if (!Directory.Exists(dirPath)) return 0;
+
+            int totalCount = 0;
+            // Iterate day by day from start to end to pick up all relevant files
+            for (var date = start.Date; date <= end.Date; date = date.AddDays(1))
+            {
+                var dateStr = date.ToString("dd-MM-yyyy");
+                var files = Directory.GetFiles(dirPath, $"*{dateStr}*.csv");
+
+                foreach (var file in files)
+                {
+                    int fileCount = CountUnitRecordsInRange(file, start, end);
+                    totalCount += fileCount;
+                    Logger.Debug("Counted {Count} units in {File} for range {Start}-{End}", fileCount, Path.GetFileName(file), start, end);
+                }
+            }
+            return totalCount;
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex, "Failed to count unit logs in range for {Status}", status);
+            return 0;
+        }
+    }
+
+    public async Task<List<JudgmentResult>> ReadLogRangeAsync(DateTime start, DateTime end)
+    {
+        var results = new List<JudgmentResult>();
+        var folder = Path.Combine(_logFolder, "Raw");
+
+        if (!Directory.Exists(folder))
+            return results;
+
+        for (var date = start.Date; date <= end.Date; date = date.AddDays(1))
+        {
+            var dateStr = date.ToString("dd-MM-yyyy");
+            var files = Directory.GetFiles(folder, $"Raw_*_{dateStr}_*.csv");
+
+            foreach (var filePath in files)
+            {
+                try
+                {
+                    using var reader = new StreamReader(filePath, Encoding.UTF8);
+                    using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
+                    {
+                        HeaderValidated = null,
+                        MissingFieldFound = null
+                    });
+
+                    var records = csv.GetRecords<CsvLogRecord>().ToList();
+                    foreach (var rec in records)
+                    {
+                        var result = MapToJudgmentResult(rec);
+                        if (result.Timestamp >= start && result.Timestamp < end)
+                        {
+                            results.Add(result);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, "Failed to read CSV log file: {File}", filePath);
+                }
+            }
+        }
+
+        return await Task.FromResult(results.OrderBy(r => r.Timestamp).ToList());
+    }
+
+    private int CountUnitRecordsInRange(string filePath, DateTime start, DateTime end)
+    {
+        if (!File.Exists(filePath)) return 0;
+        try
+        {
+            // Use FileStream with FileShare.ReadWrite to handle open files
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var reader = new StreamReader(stream, Encoding.UTF8);
+            
+            int count = 0;
+            string[] formats = { "dd/MM/yyyy HH:mm:ss", "dd/MM/yyyy HH:mm" };
+            
+            string? line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                // Format check: contains date/time separators and starts with a digit
+                string trimmed = line.Trim();
+                if (trimmed.Contains("/") && trimmed.Contains(":") && char.IsDigit(trimmed[0]))
+                {
+                    var parts = trimmed.Split(',');
+                    if (parts.Length > 0 && DateTime.TryParseExact(parts[0].Trim(), formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var timestamp))
+                    {
+                        if (timestamp >= start && timestamp < end)
+                        {
+                            count++;
+                        }
+                    }
+                }
+            }
+            return count;
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex, "Error counting records in {File}", filePath);
+            return 0;
+        }
+    }
+
     private int CountRecordsInFile(string filePath)
     {
         if (!File.Exists(filePath)) return 0;

@@ -32,6 +32,7 @@ public class HostLinkClient : IPlcClient
     private readonly SemaphoreSlim _responseSignal = new(0, 1);
 
     public event EventHandler? ResetRequestReceived;
+    public event EventHandler? ScrewFloatingDetected;
     public event EventHandler? HeartbeatSent;
 
     public string PortName => _serial.PortName;
@@ -323,14 +324,25 @@ public class HostLinkClient : IPlcClient
                     if (!IsConnected) continue;
 
                     // Read DM 1000 (Loose/Reset Request)
-                    var val = await ReadDmAsync(1000);
-                    if (val == 1)
+                    var valReset = await ReadDmAsync(1000);
+                    if (valReset == 1)
                     {
                         Logger.Information("PLC Reset Request (Loose) received at DM 1000");
                         ResetRequestReceived?.Invoke(this, EventArgs.Empty);
 
                         // Reset the trigger back to 0
                         await WriteDmAsync(1000, 0);
+                    }
+
+                    // Read DM 1002 (Screw Floating Status)
+                    var valFloating = await ReadDmAsync(1002);
+                    if (valFloating == 1)
+                    {
+                        Logger.Warning("PLC Screw Floating (NG) detected at DM 1002");
+                        ScrewFloatingDetected?.Invoke(this, EventArgs.Empty);
+
+                        // Reset the trigger back to 0
+                        await WriteDmAsync(1002, 0);
                     }
                 }
                 catch (OperationCanceledException) { }

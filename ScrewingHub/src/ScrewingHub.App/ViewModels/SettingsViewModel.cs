@@ -153,6 +153,11 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private void Save()
     {
+        if (!ScrewingHub.App.Views.ConfirmationDialog.Show("Are you sure you want to save the settings?", "Confirm Save"))
+        {
+            return;
+        }
+
         try
         {
             var s = _configService.Settings;
