@@ -26,6 +26,9 @@ The application tracks performance at two granular levels:
 ## 🔧 Torque Calibration
 A dedicated, non-disruptive interface is available for calibrating torque conversion factors by comparing DTM10 raw values against an external USB Torque Meter (e.g., Hios HP-10, Quick HM-10C). It requires capturing at least 5 readings to calculate a reliable average conversion factor.
 
+## 🔍 Screw Floating Check
+The system includes an automated **Floating Check** to detect screws that have reached the target torque but are not fully seated (e.g., cross-threaded, missing washer, or bottomed out early). By validating the actual fastening time against the configured upper (`Time UL`) and lower (`Time LL`) bounds, the system reliably flags floating screws as `NG` to ensure product quality.
+
 ## 📟 PLC Communication (Omron Host Link)
 
 The application communicates with the PLC via RS232 using an optimized Host Link (C-mode) protocol tailored for high reliability even at low baud rates.
@@ -47,6 +50,7 @@ To prevent PLC alarms on busy serial links, the app features:
 | **DM 1014** | **Error** | 1 = System Error |
 | **DM 1016** | **Alive (Heartbeat)** | Writes 1 at configured interval |
 | **DM 1000** | **Loose (Reset)** | 1 = PLC Request Reset, 0 = Acknowledged by App |
+| **DM 1002** | **Floating (NG)** | 1 = Screw Floating Detected |
 
 ## 📊 Logging System
 ScrewingHub generates robust logs stored in the configured `CSV Log Folder`:
